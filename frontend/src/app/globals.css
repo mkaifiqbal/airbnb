@@ -351,3 +351,13 @@
     @apply px-2;
   }
 }
+
+/* ─── Scrollbar hide utility (used by mobile photo strip) ─── */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+

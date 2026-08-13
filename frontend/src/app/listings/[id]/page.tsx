@@ -304,12 +304,13 @@ export default function ListingDetailPage({ params }: { params: Promise<{ id: st
             </div>
           </div>
 
-          {/* Photo Gallery Grid */}
-          <div className="relative grid grid-cols-2 gap-2 rounded-md overflow-hidden mb-8 max-h-[420px] max-[1000px]:max-h-[300px] max-[768px]:grid-cols-1 max-[768px]:max-h-[250px]">
+          {/* Photo Gallery — Desktop: 5-tile mosaic | Mobile: scrollable strip + button */}
+          {/* Desktop mosaic */}
+          <div className="relative grid grid-cols-2 gap-2 rounded-md overflow-hidden mb-4 max-h-[420px] max-[1000px]:max-h-[300px] max-[768px]:hidden">
             <div className={GALLERY_TILE} onClick={() => { setGalleryIndex(0); setShowGallery(true); }}>
               <img src={images[0]} alt={listing.title} />
             </div>
-            <div className="grid grid-cols-2 gap-2 max-[768px]:hidden">
+            <div className="grid grid-cols-2 gap-2">
               {images.slice(1, 5).map((img, i) => (
                 <div
                   key={i}
@@ -326,6 +327,25 @@ export default function ListingDetailPage({ params }: { params: Promise<{ id: st
             >
               Show all photos
             </button>
+          </div>
+
+          {/* Mobile scrollable photo strip */}
+          <div className="hidden max-[768px]:block relative -mx-4 mb-6">
+            <div className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide">
+              {images.map((img, i) => (
+                <div
+                  key={i}
+                  className="flex-shrink-0 w-full aspect-[4/3] relative cursor-pointer snap-center"
+                  onClick={() => { setGalleryIndex(i); setShowGallery(true); }}
+                >
+                  <img src={img} alt={`${listing.title} ${i + 1}`} className="w-full h-full object-cover" />
+                </div>
+              ))}
+            </div>
+            {/* Floating indicator */}
+            <div className="absolute bottom-3 right-3 bg-black/60 text-white text-xs font-semibold px-2 py-1 rounded-sm pointer-events-none">
+              {images.length} Photos
+            </div>
           </div>
 
           {/* Content Layout */}
@@ -606,24 +626,28 @@ export default function ListingDetailPage({ params }: { params: Promise<{ id: st
           >
             <IoClose size={24} />
           </button>
-          <div className="flex items-center gap-6 max-w-[90vw] max-h-[80vh]">
+          <div className="relative w-full h-full max-h-[80vh] max-w-[1200px] flex items-center justify-center px-16 max-[768px]:px-0 mt-8">
             <button
-              className={GALLERY_ICON_BTN}
+              className={`${GALLERY_ICON_BTN} absolute left-2 max-[768px]:left-1 z-10`}
               onClick={() => setGalleryIndex((i) => (i === 0 ? images.length - 1 : i - 1))}
               aria-label="Previous photo"
             >
-              <IoChevronBack size={24} />
+              <IoChevronBack size={32} />
             </button>
-            <img src={images[galleryIndex]} alt={`Photo ${galleryIndex + 1}`} className="max-w-[80vw] max-h-[80vh] object-contain rounded-sm" />
+            <img 
+              src={images[galleryIndex]} 
+              alt={`Photo ${galleryIndex + 1}`} 
+              className="max-w-full max-h-[80vh] object-contain rounded-sm" 
+            />
             <button
-              className={GALLERY_ICON_BTN}
+              className={`${GALLERY_ICON_BTN} absolute right-2 max-[768px]:right-1 z-10`}
               onClick={() => setGalleryIndex((i) => (i === images.length - 1 ? 0 : i + 1))}
               aria-label="Next photo"
             >
-              <IoChevronForward size={24} />
+              <IoChevronForward size={32} />
             </button>
           </div>
-          <div className="text-white text-base mt-4">
+          <div className="text-white text-base mt-4 mb-4">
             {galleryIndex + 1} / {images.length}
           </div>
         </div>
