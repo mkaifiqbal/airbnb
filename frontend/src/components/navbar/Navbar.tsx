@@ -94,8 +94,8 @@ export default function Navbar({ onSearch, onLogoClick }: NavbarProps) {
 
   return (
     <>
-      <nav className="sticky top-0 bg-airbnb-bg border-b border-airbnb-border-light z-[100] h-[var(--navbar-height)]">
-        <div className="max-w-wide mx-auto px-10 h-full flex items-center justify-between max-[1128px]:px-6">
+      <nav className={`sticky top-0 bg-airbnb-bg border-b border-airbnb-border z-[100] ${searchExpanded ? 'h-auto' : 'h-[var(--navbar-height)]'}`}>
+        <div className="max-w-wide mx-auto px-10 h-[var(--navbar-height)] flex items-center justify-between max-[1128px]:px-6 max-[768px]:px-4">
           {/* Logo */}
           <button
             onClick={() => {
@@ -113,10 +113,13 @@ export default function Navbar({ onSearch, onLogoClick }: NavbarProps) {
             <span className="text-[22px] font-extrabold text-airbnb-pink tracking-tight max-[768px]:hidden">airbnb</span>
           </button>
 
-          {/* Search Bar */}
-          {!searchExpanded ? (
-            <button className="flex items-center border border-airbnb-border rounded-pill py-[7px] pr-[7px] pl-5 shadow-search hover:shadow-search-hover transition-shadow duration-base cursor-pointer bg-airbnb-bg" onClick={() => setSearchExpanded(true)}>
-              <span className="text-sm font-semibold text-airbnb-dark px-4">{searchLocation || 'Anywhere'}</span>
+          {/* Search Bar — collapsed pill (always visible in top row) */}
+          {!searchExpanded && (
+            <button
+              className="flex items-center border border-airbnb-border rounded-pill py-[7px] pr-[7px] pl-5 shadow-search hover:shadow-search-hover transition-shadow duration-base cursor-pointer bg-airbnb-bg max-[768px]:pl-3 max-[768px]:py-1.5"
+              onClick={() => setSearchExpanded(true)}
+            >
+              <span className="text-sm font-semibold text-airbnb-dark px-4 max-[768px]:px-2 max-[768px]:text-xs">{searchLocation || 'Anywhere'}</span>
               <span className="w-px h-6 bg-airbnb-border" />
               <span className="text-sm font-semibold text-airbnb-dark px-4 max-[768px]:hidden">
                 {searchCheckIn && searchCheckOut
@@ -127,66 +130,14 @@ export default function Navbar({ onSearch, onLogoClick }: NavbarProps) {
               <span className="text-sm text-airbnb-gray px-4 max-[768px]:hidden">
                 {searchGuests > 1 ? `${searchGuests} guests` : 'Add guests'}
               </span>
-              <span className="flex items-center justify-center w-8 h-8 bg-airbnb-pink text-white rounded-full ml-2">
+              <span className="flex items-center justify-center w-8 h-8 bg-airbnb-pink text-white rounded-full ml-2 max-[768px]:w-7 max-[768px]:h-7">
                 <FiSearch size={14} />
               </span>
             </button>
-          ) : (
-            <form
-              className="flex items-center border border-airbnb-border rounded-pill bg-airbnb-bg shadow-[0_3px_12px_rgba(0,0,0,0.15)] max-w-[720px] animate-slideDown max-[768px]:flex-col max-[768px]:rounded-lg max-[768px]:w-full"
-              onSubmit={(event) => { event.preventDefault(); handleSearch(); }}
-            >
-              <div className="py-2 px-6 flex-1 relative">
-                <label className="block text-xs font-bold text-airbnb-dark mb-0.5">Where</label>
-                <input
-                  type="text"
-                  placeholder="Search destinations"
-                  value={searchLocation}
-                  onChange={(e) => setSearchLocation(e.target.value)}
-                  autoFocus
-                  className="border-none outline-none text-sm text-airbnb-gray w-full bg-transparent"
-                />
-              </div>
-              <div className="w-px h-8 bg-airbnb-border shrink-0 max-[768px]:w-full max-[768px]:h-px" />
-              <div className="py-2 px-6 flex-1 relative">
-                <DatePicker
-                  label="Check in"
-                  value={searchCheckIn}
-                  onChange={setSearchCheckIn}
-                  minDate={new Date().toISOString().split('T')[0]}
-                  placeholder="Add dates"
-                />
-              </div>
-              <div className="w-px h-8 bg-airbnb-border shrink-0 max-[768px]:w-full max-[768px]:h-px" />
-              <div className="py-2 px-6 flex-1 relative">
-                <DatePicker
-                  label="Check out"
-                  value={searchCheckOut}
-                  onChange={setSearchCheckOut}
-                  minDate={nextDate(searchCheckIn)}
-                  placeholder="Add dates"
-                />
-              </div>
-              <div className="w-px h-8 bg-airbnb-border shrink-0 max-[768px]:w-full max-[768px]:h-px" />
-              <div className="flex items-center gap-2 py-2 pr-2 pl-6">
-                <div className="relative flex-1">
-                  <GuestPicker
-                    label="Who"
-                    value={searchGuests}
-                    onChange={setSearchGuests}
-                    align="right"
-                  />
-                </div>
-                <button type="submit" className="flex items-center gap-2 bg-gradient-to-r from-[#E61E4D] via-[#E31C5F] to-[#D70466] text-white border-none rounded-pill px-5 py-3 text-base font-semibold cursor-pointer hover:opacity-90 transition-opacity duration-fast whitespace-nowrap">
-                  <FiSearch size={16} />
-                  <span>Search</span>
-                </button>
-              </div>
-            </form>
           )}
 
           {/* Right Section */}
-          <div className="flex items-center gap-1 shrink-0">
+          <div className={`flex items-center gap-1 shrink-0 ${searchExpanded ? 'max-[768px]:hidden' : ''}`}>
             {isSignedIn && user?.is_host ? (
               <Link href="/host" className="px-3 py-3 text-sm font-semibold text-airbnb-dark rounded-pill hover:bg-airbnb-bg-secondary transition-colors duration-fast whitespace-nowrap no-underline max-[768px]:hidden">
                 Host Dashboard
@@ -292,7 +243,66 @@ export default function Navbar({ onSearch, onLogoClick }: NavbarProps) {
           </div>
         </div>
 
-        {/* Click-away for expanded search */}
+        {/* Expanded search — full-width row below the logo/menu row on mobile */}
+        {searchExpanded && (
+          <div className="px-10 pb-3 max-[1128px]:px-6 max-[768px]:px-4 max-[768px]:pb-4">
+            <form
+              className="flex items-center border border-airbnb-border rounded-pill bg-airbnb-bg shadow-[0_3px_12px_rgba(0,0,0,0.15)] w-full max-w-[720px] mx-auto animate-slideDown max-[768px]:flex-col max-[768px]:rounded-xl max-[768px]:max-w-full"
+              onSubmit={(event) => { event.preventDefault(); handleSearch(); }}
+            >
+              <div className="py-2 px-6 flex-1 min-w-0 max-[768px]:w-full max-[768px]:px-4 max-[768px]:pt-3">
+                <label className="block text-xs font-bold text-airbnb-dark mb-0.5">Where</label>
+                <input
+                  type="text"
+                  placeholder="Search destinations"
+                  value={searchLocation}
+                  onChange={(e) => setSearchLocation(e.target.value)}
+                  autoFocus
+                  className="border-none outline-none text-sm text-airbnb-gray w-full bg-transparent"
+                />
+              </div>
+              <div className="w-px h-8 bg-airbnb-border shrink-0 max-[768px]:w-full max-[768px]:h-px" />
+              <div className="py-2 px-6 flex-1 min-w-0 max-[768px]:w-full max-[768px]:px-4">
+                <DatePicker
+                  label="Check in"
+                  value={searchCheckIn}
+                  onChange={setSearchCheckIn}
+                  minDate={new Date().toISOString().split('T')[0]}
+                  placeholder="Add dates"
+                  align="left"
+                />
+              </div>
+              <div className="w-px h-8 bg-airbnb-border shrink-0 max-[768px]:w-full max-[768px]:h-px" />
+              <div className="py-2 px-6 flex-1 min-w-0 max-[768px]:w-full max-[768px]:px-4">
+                <DatePicker
+                  label="Check out"
+                  value={searchCheckOut}
+                  onChange={setSearchCheckOut}
+                  minDate={nextDate(searchCheckIn)}
+                  placeholder="Add dates"
+                  align="left"
+                />
+              </div>
+              <div className="w-px h-8 bg-airbnb-border shrink-0 max-[768px]:w-full max-[768px]:h-px" />
+              <div className="flex items-center gap-2 py-2 pr-2 pl-6 max-[768px]:w-full max-[768px]:px-4 max-[768px]:pb-3 max-[768px]:justify-between">
+                <div className="relative flex-1">
+                  <GuestPicker
+                    label="Who"
+                    value={searchGuests}
+                    onChange={setSearchGuests}
+                    align="right"
+                  />
+                </div>
+                <button type="submit" className="flex items-center gap-2 bg-gradient-to-r from-[#E61E4D] via-[#E31C5F] to-[#D70466] text-white border-none rounded-pill px-5 py-3 text-base font-semibold cursor-pointer hover:opacity-90 transition-opacity duration-fast whitespace-nowrap">
+                  <FiSearch size={16} />
+                  <span>Search</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        )}
+
+        {/* Click-away overlay */}
         {searchExpanded && (
           <div className="fixed inset-0 top-[var(--navbar-height)] bg-black/25 -z-[1]" onClick={() => setSearchExpanded(false)} />
         )}

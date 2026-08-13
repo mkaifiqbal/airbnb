@@ -128,7 +128,7 @@ export default function DatePicker({
 
       {isOpen && (
         <div
-          className={`absolute top-[calc(100%+8px)] bg-airbnb-bg rounded-lg shadow-dropdown p-5 z-[1000] w-80 animate-calendarSlideIn max-[480px]:w-[280px] max-[480px]:p-4 ${ALIGN_CLASS[align]}`}
+          className={`absolute top-[calc(100%+8px)] bg-airbnb-bg rounded-lg shadow-dropdown p-5 z-[1000] w-80 animate-calendarSlideIn max-[480px]:w-[calc(100vw-2rem)] max-[480px]:p-4 max-[768px]:left-0 ${ALIGN_CLASS[align]}`}
         >
           {/* Month navigation */}
           <div className="flex justify-between items-center mb-4">

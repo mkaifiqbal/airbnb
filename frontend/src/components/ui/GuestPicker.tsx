@@ -87,7 +87,7 @@ export default function GuestPicker({
       </div>
 
       {isOpen && (
-        <div className={`absolute top-[calc(100%+8px)] bg-airbnb-bg rounded-lg shadow-dropdown px-6 py-4 z-[1000] w-[340px] animate-calendarSlideIn ${ALIGN_CLASS[align]}`}>
+        <div className={`absolute top-[calc(100%+8px)] bg-airbnb-bg rounded-lg shadow-dropdown px-6 py-4 z-[1000] w-[340px] animate-calendarSlideIn max-[768px]:left-0 max-[768px]:right-auto max-[768px]:w-[calc(100vw-2rem)] ${ALIGN_CLASS[align]}`}>
           {/* Adults */}
           <div className={ROW}>
             <div className="flex flex-col">
