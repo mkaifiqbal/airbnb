@@ -8,7 +8,7 @@ import {
   Category, User, AuthResponse, GeolocationData, SearchFilters,
 } from '@/types';
 
-const rawApiBase = process.env.NEXT_PUBLIC_API_URL || 'https://airbnb-ngru.onrender.com';
+const rawApiBase = process.env.NEXT_PUBLIC_API_URL || 'https://airbnb.fastapicloud.dev';
 const API_BASE = rawApiBase.replace(/\/+$/, '');
 
 /**
