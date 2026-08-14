@@ -14,6 +14,13 @@ An Airbnb-inspired full-stack web application built with **Next.js 16 (React 19,
 > 🚀 **Deploying to Vercel & Render?** Follow the step-by-step [DEPLOYMENT.md](file:///c:/Users/M%20Kaif/Desktop/ScalerAiAirBNB/DEPLOYMENT.md) guide with auto-seeded demo data on Render restarts.
 
 ---
+### Deployment Note
+
+The backend was initially deployed on Render. Due to the exhaustion of the Render free-tier limit, it has been migrated to FastAPI Cloud. No changes were made to the backend functionality; only the hosting provider was changed.
+
+**Temporary Downtime:** The backend was temporarily unavailable from **6:45 PM to 7:20 PM on August 14, 2026**, during the migration from Render to FastAPI Cloud.
+
+---
 
 ## 🚀 Key Features
 
